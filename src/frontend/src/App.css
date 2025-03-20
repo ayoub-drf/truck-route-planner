@@ -1,0 +1,13 @@
+.custom-step-icon {
+    background: yellow;
+    border: 1px solid #333;
+    border-radius: 50%;
+    color: #333;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 24px;
+    width: 24px;
+    height: 24px;
+  }
+  

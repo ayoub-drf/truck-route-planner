@@ -1,0 +1,8 @@
+.env
+.venv
+node_modules
+main.py
+styles.css
+index.html
+route.geojson
+
