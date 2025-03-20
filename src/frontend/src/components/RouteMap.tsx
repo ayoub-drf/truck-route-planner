@@ -22,7 +22,7 @@ const RouteMap = () => {
             (data.bbox[0] + data.bbox[2]) / 2 // Average longitude
         ];
 
-        console.log(centerView)
+        // console.log(centerView)
 
 
 
@@ -47,14 +47,14 @@ const RouteMap = () => {
             });
         });
 
-        console.log(markers)
+        // console.log(markers)
 
     }).catch((error) => console.error('Error fetching route data:', error))
     
   }, [])
 
   useEffect(() => {
-    console.log(routeData)
+    // console.log(routeData)
   }, [routeData])
   
   

@@ -1,16 +1,13 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-expect-error
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { useTripFormModalStore } from '../store/Store';
 
 
-
 const navigation = [
   { name: 'Trip Planner', href: '/', current: true },
-  { name: 'Pricing', href: '#', current: false },
-  { name: 'History', href: '#', current: false },
+  { name: 'Pricing', href: '/pricing/', current: false },
+  { name: 'History', href: '/history/', current: false },
 ]
 
 function classNames(...classes: string[]) {

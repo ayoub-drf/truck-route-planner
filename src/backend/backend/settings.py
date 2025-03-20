@@ -132,5 +132,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 OPENROUTESERVICE_API_KEY = config('OPENROUTESERVICE_API_KEY', cast=str)
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # React frontend
+    config('ALLOWED_ORIGIN', cast=str),  # React frontend
 ]

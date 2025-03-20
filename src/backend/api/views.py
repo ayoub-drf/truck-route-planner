@@ -1,23 +1,9 @@
-import requests
-from django.conf import settings
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
-from django.http import JsonResponse
-
-import requests
-from django.conf import settings
-
 import requests
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-
-import json
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
-
-from rest_framework import status
 
 
 class GenerateRouteAPI(APIView):
@@ -32,7 +18,7 @@ class GenerateRouteAPI(APIView):
             'current_location': current_location,
             'pickupLocation': pickup_location,
             'dropoffLocation': dropoff_location
-        }, status=status.HTTP_200_OK)
+        }, status=status.HTTP_201_CREATED)
 
 
 
@@ -47,7 +33,7 @@ def place_autocomplete(request):
     response = requests.get(url)
     data = response.json()
 
-    return JsonResponse(data['features'], safe=False)
+    return Response(data['features'], status.HTTP_200_OK)
 
 
 
