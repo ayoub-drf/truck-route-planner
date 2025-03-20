@@ -29,11 +29,9 @@ const RouteMap = () => {
       .then(response => response.json())
       .then(data => {
         setRouteData(data);
-        // Decode the encoded polyline geometry (returns an array of [lat, lng] pairs)
         const decodedCoords = polyline.decode(data.routes[0].geometry);
         setRouteLatLngs(decodedCoords);
 
-        // Create numbered markers for each step, including the instruction text.
         let counter = 1;
         const markers: StepMarker[] = [];
         data.routes[0].segments.forEach((segment: any) => {
@@ -42,7 +40,7 @@ const RouteMap = () => {
             markers.push({
               position: decodedCoords[startIdx],
               label: counter,
-              instruction: step.instruction, // Save the instruction text
+              instruction: step.instruction,
             });
             counter++;
           });
