@@ -20,16 +20,18 @@ interface StepMarker {
 }
 
 const RouteMap = () => {
+  let markerPosition;
   const [routeLatLngs, setRouteLatLngs] = useState<[number, number][]>([]);
   const [stepMarkers, setStepMarkers] = useState<StepMarker[]>([]);
   const [routeData, setRouteData] = useState<any>(null);
 
   useEffect(() => {
+    let markerPosition;
     fetch('rout-map.json')
       .then(response => response.json())
       .then(data => {
         setRouteData(data);
-        const decodedCoords = polyline.decode(data.routes[0].geometry);
+        const decodedCoords = data.routes[0].geometry;
         setRouteLatLngs(decodedCoords);
 
         let counter = 1;
@@ -37,8 +39,16 @@ const RouteMap = () => {
         data.routes[0].segments.forEach((segment: any) => {
           segment.steps.forEach((step: any) => {
             const startIdx = step.way_points[0];
+            if (step.stop_coord && step.instruction.toLowerCase().includes('drop')) {
+              markerPosition = step.stop_coord;
+            }
+             else {
+              markerPosition = decodedCoords[step.way_points[0]];
+            }
+            console.log()
             markers.push({
-              position: decodedCoords[startIdx],
+              position: markerPosition,
+              // position: decodedCoords[startIdx],
               label: counter,
               instruction: step.instruction,
             });
@@ -61,7 +71,7 @@ const RouteMap = () => {
         attribution="&copy; OpenStreetMap contributors"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {routeLatLngs.length > 0 && <Polyline positions={routeLatLngs} color="blue" />}
+      {routeLatLngs.length > 0 && <Polyline positions={routeLatLngs} color="red" />}
       {stepMarkers.map((marker, index) => {
         const icon = L.divIcon({
           className: 'custom-step-icon',

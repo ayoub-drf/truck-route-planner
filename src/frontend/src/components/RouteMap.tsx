@@ -1,78 +1,95 @@
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline, Tooltip, useMap } from 'react-leaflet';
-import type { StepMarker } from "../types/types";
 import L from 'leaflet';
 import polyline from '@mapbox/polyline';
 import 'leaflet/dist/leaflet.css';
 import '../App.css';
-import axios from 'axios';
 
+const MapBounds: React.FC<{ bounds: L.LatLngBounds }> = ({ bounds }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.fitBounds(bounds);
+  }, [bounds, map]);
+  return null;
+};
 
+interface StepMarker {
+  position: [number, number];
+  label: number;
+  instruction: string;
+}
 
 const RouteMap = () => {
+  let markerPosition;
   const [routeLatLngs, setRouteLatLngs] = useState<[number, number][]>([]);
+  const [stepMarkers, setStepMarkers] = useState<StepMarker[]>([]);
   const [routeData, setRouteData] = useState<any>(null);
-  const [bboxView, setBboxView] = useState<[number, number]>([34.0, -7.0])
 
   useEffect(() => {
-    fetch("rout-map.json").then(res => res.json()).then(data => {
-        setRouteData(data)
-        const centerView = [
-            (data.bbox[1] + data.bbox[3]) / 2,  // Average latitude
-            (data.bbox[0] + data.bbox[2]) / 2 // Average longitude
-        ];
-
-        // console.log(centerView)
-
-
-
-
-
-        // Decode the encoded polyline geometry (returns an array of [lat, lng] pairs)
-        const decodedCoords = polyline.decode(data.routes[0].geometry);
-        setRouteLatLngs(decodedCoords)
+    let markerPosition;
+    fetch('rout-map.json')
+      .then(response => response.json())
+      .then(data => {
+        setRouteData(data);
+        const decodedCoords = data.routes[0].geometry;
+        setRouteLatLngs(decodedCoords);
 
         let counter = 1;
         const markers: StepMarker[] = [];
-
-        data.routes[0].segments.forEach(segment => {
-            segment.steps.forEach(step => {
-                const startIdx = step.way_points[0];
-                markers.push({
-                    position: decodedCoords[startIdx],
-                    label: counter,
-                    instruction: step.instruction,
-                  });
-                counter++;
+        data.routes[0].segments.forEach((segment: any) => {
+          segment.steps.forEach((step: any) => {
+            const startIdx = step.way_points[0];
+            if (step.stop_coord && step.instruction.toLowerCase().includes('drop')) {
+              markerPosition = step.stop_coord;
+            }
+             else {
+              markerPosition = decodedCoords[step.way_points[0]];
+            }
+            console.log()
+            markers.push({
+              position: markerPosition,
+              // position: decodedCoords[startIdx],
+              label: counter,
+              instruction: step.instruction,
             });
+            counter++;
+          });
         });
+        setStepMarkers(markers);
+      })
+      .catch(error => console.error('Error fetching route data:', error));
+  }, []);
 
-        // console.log(markers)
-
-    }).catch((error) => console.error('Error fetching route data:', error))
-    
-  }, [])
-
-  useEffect(() => {
-    // console.log(routeData)
-  }, [routeData])
-  
-  
+  let bounds: L.LatLngBounds | undefined;
+  if (routeLatLngs.length > 0) {
+    bounds = L.latLngBounds(routeLatLngs);
+  }
 
   return (
-    // The main container where the map is rendered.
-    <MapContainer center={[33.819899500000005, -83.880172]} zoom={5} style={{ height: '600px', width: '100%' }}>
-        {/* Loads the background images (tiles) that make up the map */}
-        <TileLayer
-            attribution="&copy; OpenStreetMap contributors"
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-
-        {/* Draws a line on the map by connecting a series of coordinates */}
-        {routeLatLngs.length > 0 && <Polyline positions={routeLatLngs} color="red" />}
-
+    <MapContainer center={[34.0, -7.0]} zoom={8} style={{ height: '600px', width: '100%' }}>
+      <TileLayer
+        attribution="&copy; OpenStreetMap contributors"
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      {routeLatLngs.length > 0 && <Polyline positions={routeLatLngs} color="red" />}
+      {stepMarkers.map((marker, index) => {
+        const icon = L.divIcon({
+          className: 'custom-step-icon',
+          html: marker.label.toString(),
+          iconSize: [24, 24],
+          iconAnchor: [12, 12],
+        });
+        return (
+          <Marker key={index} position={marker.position} icon={icon}>
+            <Tooltip direction="top" offset={[0, -10]} opacity={1} permanent={false}>
+              {marker.instruction}
+            </Tooltip>
+          </Marker>
+        );
+      })}
+      {bounds && <MapBounds bounds={bounds} />}
     </MapContainer>
-  )
-}
+  );
+};
 
-export default RouteMap
+export default RouteMap;
