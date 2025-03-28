@@ -1,5 +1,11 @@
 export type TripFormModalProps = {
     hideTripModal: () => void;
+    showRouteMap: () => void;
+    
+};
+
+export type RouteMapProps = {
+    showRouteMap: () => void;
 };
 
 export interface StepMarker {

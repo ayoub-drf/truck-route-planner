@@ -1,42 +1,49 @@
-import json
-import polyline
 
-result = {}
+def create_rests_and_stops(route_data):
+    import json
+    import polyline
 
-def miles_to_meters(miles):
-    return miles * 1609.34
-
-def meters_to_miles(meters):
-    return meters * 0.000621371
-
-def seconds_to_hours(seconds):
-    return seconds / 3600
-
-def hours_to_seconds(hours):
-    return hours * 3600
-
-def create_stop_step(stop_type, duration_seconds, prev_way_points, route_geometry=None):
-    # Use the ending way_point of the previous step, then increment for the next
-    start_idx = prev_way_points[1]
+    result = {}
+    number_of_breaks = 0
+    number_of_fueling = 0
+    number_of_off_duty = 0
+    pickup_miles = 0
+    dropoff_miles = 0
     
-    coord = route_geometry[start_idx]
-    # Apply a small offset (adjust as needed)
-    offset_lat = 0.0001
-    offset_lon = 0.0001
-    stop_coord = [coord[0] + offset_lat, coord[1] + offset_lon]
-    return {
-        "distance": 0,
-        "duration": duration_seconds,
-        "type": 12,
-        "instruction": f"{stop_type} stop",
-        "name": "-",
-        "way_points": [start_idx, start_idx + 1],
-        "stop_coord": stop_coord
-    }
+
+    def miles_to_meters(miles):
+        return miles * 1609.34
+
+    def meters_to_miles(meters):
+        return meters * 0.000621371
+
+    def seconds_to_hours(seconds):
+        return seconds / 3600
+
+    def hours_to_seconds(hours):
+        return hours * 3600
+
+    def create_stop_step(stop_type, duration_seconds, prev_way_points, route_geometry=None):
+        # Use the ending way_point of the previous step, then increment for the next
+        start_idx = prev_way_points[1]
+        
+        coord = route_geometry[start_idx]
+        # Apply a small offset (adjust as needed)
+        offset_lat = 0.0001
+        offset_lon = 0.0001
+        stop_coord = [coord[0] + offset_lat, coord[1] + offset_lon]
+        return {
+            "distance": 0,
+            "duration": duration_seconds,
+            "type": 12,
+            "instruction": f"{stop_type} stop",
+            "name": "-",
+            "way_points": [start_idx, start_idx],
+            "stop_coord": stop_coord
+        }
 
 
-with open('route.geojson', 'r') as file:
-    geojson = json.load(file)
+    geojson = route_data
     result['bbox'] = geojson['bbox']
     result['metadata'] = geojson['metadata']
     
@@ -92,6 +99,7 @@ with open('route.geojson', 'r') as file:
                 if fueling_stop_break_tracker >= miles_to_meters(1000):
                     fueling_stop_break = create_stop_step("Fueling", 1800, step['way_points'], route_geometry_decoded)
                     print("Fueling")
+                    number_of_fueling += 1
                     segment_obj["steps"].append(fueling_stop_break)
                     prev_idx = step['way_points'][1]
                     route_geometry_decoded.insert(prev_idx + 1, fueling_stop_break["stop_coord"])
@@ -105,6 +113,7 @@ with open('route.geojson', 'r') as file:
                         pickup_tracker_status = True
                         pickup_stop_break = create_stop_step("Pickup", 3600, step['way_points'], route_geometry_decoded)
                         print("Pickup")
+                        pickup_miles = round(meters_to_miles(pickup_tracker), 2)
                         segment_obj["steps"].append(pickup_stop_break)
                         prev_idx = step['way_points'][1]
                         route_geometry_decoded.insert(prev_idx + 1, pickup_stop_break["stop_coord"])
@@ -115,6 +124,7 @@ with open('route.geojson', 'r') as file:
                 if dropoff_tracker >= route_summary['distance'] and not dropoff_tracker_status:
                     dropoff_stop_break = create_stop_step("DropOff", 3600, step['way_points'], route_geometry_decoded)
                     print("DropOff")
+                    dropoff_miles = round(miles_to_meters(dropoff_tracker))
                     segment_obj["steps"].append(dropoff_stop_break)
                     prev_idx = step['way_points'][1]
                     route_geometry_decoded.insert(prev_idx + 1, dropoff_stop_break["stop_coord"])
@@ -126,6 +136,7 @@ with open('route.geojson', 'r') as file:
                 if eight_hours_driving_rest_tracker >= hours_to_seconds(8):
                     eight_hours_driving_stop_break = create_stop_step("Break", 1800, step['way_points'], route_geometry_decoded)
                     print('Break')
+                    number_of_breaks += 1
                     segment_obj["steps"].append(eight_hours_driving_stop_break)
                     prev_idx = step['way_points'][1]
                     route_geometry_decoded.insert(prev_idx + 1, eight_hours_driving_stop_break["stop_coord"])
@@ -138,6 +149,7 @@ with open('route.geojson', 'r') as file:
                     #       seconds_to_hours(max_driving_limit_hour_tracker + current_breaks), "hours")
                     day_on_duty = max_driving_limit_hour_tracker + current_breaks
                     cumulative_on_duty += day_on_duty
+                    number_of_off_duty += 1
                     # Insert a mandatory 10-hour off-duty break
                     off_duty_break = create_stop_step("Off-Duty Break", hours_to_seconds(10), step['way_points'], route_geometry_decoded)
                     print('Off-Duty Break')
@@ -164,8 +176,13 @@ with open('route.geojson', 'r') as file:
                 
             route_obj["segments"].append(segment_obj)
             
-        result['routes'].append(route_obj)      
-
-# print("Remaining driving time (in hours):", seconds_to_hours(max_driving_limit_hour_tracker))
-with open('result.json', 'w') as f:
-    json.dump(result, f, indent=2)
+        result['routes'].append(route_obj)  
+        
+    return {
+        'result': result,
+        'number_of_breaks': number_of_breaks,
+        'number_of_fueling': number_of_fueling,
+        'number_of_off_duty': number_of_off_duty,
+        'pickup_miles': pickup_miles,
+        'dropoff_miles': dropoff_miles,
+    }

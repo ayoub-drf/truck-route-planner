@@ -4,6 +4,8 @@ import type { TripFormModalProps } from "../types/types";
 import React, { FC, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../api";
+import { toast } from "react-toastify";
+import { useRoadStatisticsStore } from "../store/Store";
 
 
 interface SuggestionsTypes {
@@ -11,7 +13,8 @@ interface SuggestionsTypes {
   label: string;
 }
 
-const TripFormModal: FC<TripFormModalProps> = ({ hideTripModal }) => {
+const TripFormModal: FC<TripFormModalProps> = ({ hideTripModal, showRouteMap }) => {
+  const {setDropoffMiles, setNumberOfBreaks, setNumberOfFueling, setNumberOfOffDuty, setPickupMiles, setTotalDrivingHours, setTotalDrivingMiles, setRoute} = useRoadStatisticsStore()
   const [currentLocation, setCurrentLocation] = useState<SuggestionsTypes | null>(null);
   const [pickupLocation, setPickupLocation] = useState<SuggestionsTypes | null>(null);
   const [dropoffLocation, setDropoffLocation] = useState<SuggestionsTypes | null>(null);
@@ -25,7 +28,6 @@ const TripFormModal: FC<TripFormModalProps> = ({ hideTripModal }) => {
     if (value.length > 2) {
       try {
         const res = await api.get(`autocomplete/?query=${value}`)
-        console.log(res.status)
         if (res.status == 200) {
           const suggestions = res.data.map((item: any) => ({
             label: item.properties.label,
@@ -82,14 +84,23 @@ const TripFormModal: FC<TripFormModalProps> = ({ hideTripModal }) => {
       dropoffLocation,
     };
 
+
     try {
       const res = await api.post(`generate-route/`, data);
-      if (res.status == 201) {
-        console.log(res.data)
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    }
+      console.log(res.data)
+      setDropoffMiles(res.data.dropoff_miles)
+      setNumberOfBreaks(res.data.number_of_breaks)
+      setNumberOfFueling(res.data.number_of_fueling)
+      setNumberOfOffDuty(res.data.number_of_off_duty)
+      setPickupMiles(res.data.pickup_miles)
+      setTotalDrivingHours(res.data.total_driving_hours)
+      setTotalDrivingMiles(res.data.total_driving_miles)
+      setRoute(res.data.route)
+      showRouteMap()
+      hideTripModal()
+    } catch (error: any) {
+      toast.warning(error.response.data.message)
+    } 
 
   }
 
@@ -126,7 +137,7 @@ const TripFormModal: FC<TripFormModalProps> = ({ hideTripModal }) => {
                   className="mt-1 w-full border p-2 outline-none focus:border focus:border-[#2186F3] "
                 />
                 {currentLocationSuggestions.length > 0 && (
-                    <ul className="absolute space-y-4 left-0 w-[100%] p-3 border border-t-0 border-[#2186F3] bg-white text-black">
+                    <ul className="absolute space-y-4 left-0 w-[100%] p-3 border border-t-0 border-[#2186F3] bg-white text-black overflow-y-auto h-full">
                       {currentLocationSuggestions.map((suggestion, index) => (
                         <li
                           key={index}
@@ -152,7 +163,7 @@ const TripFormModal: FC<TripFormModalProps> = ({ hideTripModal }) => {
                   className="mt-1 w-full rounded border p-2 outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {pickupLocationSuggestions.length > 0 && (
-                    <ul className="absolute space-y-4 left-0 w-[100%] p-3 border border-t-0 border-[#2186F3] bg-white text-black">
+                    <ul className="absolute space-y-4 left-0 w-[100%] p-3 border border-t-0 border-[#2186F3] bg-white text-black overflow-y-auto h-full">
                       {pickupLocationSuggestions.map((suggestion, index) => (
                         <li
                           key={index}
@@ -178,7 +189,7 @@ const TripFormModal: FC<TripFormModalProps> = ({ hideTripModal }) => {
                   className="mt-1 w-full rounded border p-2 outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {dropoffLocationSuggestions.length > 0 && (
-                    <ul className="absolute space-y-4 left-0 w-[100%] p-3 border border-t-0 border-[#2186F3] bg-white text-black">
+                    <ul className="absolute space-y-4 left-0 w-[100%] p-3 border border-t-0 border-[#2186F3] bg-white text-black overflow-y-auto h-full">
                       {dropoffLocationSuggestions.map((suggestion, index) => (
                         <li
                           key={index}
