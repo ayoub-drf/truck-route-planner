@@ -17,11 +17,7 @@ class GenerateRouteAPI(APIView):
         current_location = data.get('currentLocation')
         pickup_location = data.get('pickupLocation')
         dropoff_location = data.get('dropoffLocation')
-        
-        print(current_location)
-        print(pickup_location)
-        print(dropoff_location)
-        
+                
         route_coordinates = [
             current_location.get('coordinates'),
             pickup_location.get('coordinates'),
@@ -63,7 +59,7 @@ class GenerateRouteAPI(APIView):
         except:
 
             return Response({
-                'message': "",
+                'message': "an error occurred please wait abd try again",
             }, status=status.HTTP_404_NOT_FOUND)
             
                 

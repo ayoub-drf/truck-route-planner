@@ -1,6 +1,5 @@
 
 def create_rests_and_stops(route_data):
-    import json
     import polyline
 
     result = {}

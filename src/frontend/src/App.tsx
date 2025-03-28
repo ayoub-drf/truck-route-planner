@@ -17,7 +17,7 @@ const App = () => {
       {isOpen && <TripFormModal hideTripModal={hideTripModal} showRouteMap={showRouteMap} />}
       <Navbar />
       <ToastContainer />
-      {!isRouteMapOpen ? <RouteMap  /> : <Landing />}
+      {isRouteMapOpen ? <RouteMap  /> : <Landing />}
     </div>
   );
 };

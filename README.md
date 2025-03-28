@@ -36,6 +36,8 @@ cd src/frontend/ && npm run dev
 
 #### **Screenshots**  
 ![Truck Planner State](truck-planner.png-state.png)  
+![Truck Planner State](truck-planner-mobile1.png)  
+![Truck Planner State](truck-planner-mobile.png)  
 
 #### **Contributing**  
 We welcome contributions! Feel free to submit a PR or open an issue.  
