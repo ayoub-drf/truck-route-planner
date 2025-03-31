@@ -26,7 +26,12 @@ SECRET_KEY = config('DJANGO_SECRET_KEY', cast=str)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DJANGO_DEBUG', cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '0.0.0.0',
+    'localhost',
+    '127.0.0.1',
+    
+]
 
 
 # Application definition
@@ -133,6 +138,7 @@ OPENROUTESERVICE_API_KEY = config('OPENROUTESERVICE_API_KEY', cast=str)
 
 CORS_ALLOWED_ORIGINS = [
     config('ALLOWED_ORIGIN', cast=str),  # React frontend
+    config('ALLOWED_ORIGIN_TWO', cast=str),  # React frontend
 ]
 
 CELERY_RESULT_BACKEND = "redis://localhost:6379"

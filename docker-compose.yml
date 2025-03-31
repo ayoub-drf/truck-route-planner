@@ -1,0 +1,50 @@
+
+services:
+  frontend:
+    build:
+      context: ./src/frontend/
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:80"
+    env_file:
+      - .env
+    restart: always
+
+
+  # db:
+  #   image: mysql
+  #   container_name: my_sql_container
+  #   restart: always
+  #   volumes:
+  #     - data:/var/lib/mysql
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  #     MYSQL_DATABASE: ${MYSQL_DATABASE}
+  #     MYSQL_USER: ${MYSQL_USER}
+  #     MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  #   ports:
+  #     - "3306:3306"
+  #   healthcheck:
+  #     test: ["CMD", "mysql", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}", "-e", "SELECT 1"]
+  #     timeout: 20s
+  #     retries: 10
+  
+  backend:
+    build: 
+      context: ./src/backend/
+      dockerfile: Dockerfile
+    container_name: backend
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: always
+    volumes:
+      - ./src/backend:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+volumes:
+  data:

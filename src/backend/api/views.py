@@ -40,6 +40,7 @@ class GenerateRouteAPI(APIView):
             if route_data.get('error'):
                 return Response({'message': route_data['error']['message']}, status=status.HTTP_404_NOT_FOUND)
             
+            print('route_data ', route_data)
             result = create_rests_and_stops(route_data)
             
             total_driving_hours = round((route_data.get('routes')[0].get('summary').get('duration') / 3600), 2)

@@ -139,7 +139,7 @@ def create_rests_and_stops(route_data):
                     segment_obj["steps"].append(eight_hours_driving_stop_break)
                     prev_idx = step['way_points'][1]
                     route_geometry_decoded.insert(prev_idx + 1, eight_hours_driving_stop_break["stop_coord"])
-                    current_breaks += 1800
+                    # current_breaks += 1800
                     eight_hours_driving_rest_tracker -= hours_to_seconds(8)
                 
                 # 14-hour on-duty limit check (driving time + breaks)
