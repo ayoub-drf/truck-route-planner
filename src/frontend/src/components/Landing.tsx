@@ -2,10 +2,8 @@
 const Landing = () => {
   return (
     <div className="relative">
-
-   
-        {/* <div className="cPctGk"></div> */}
-      <div className="flex flex-col lg:flex-row items-center justify-between mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-44 gap-8">
+      <div className="cPctGk"></div>
+      <div className="flex h-[120vh] flex-col lg:flex-row items-center justify-between mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-44 gap-8">
         {/* Text Section */}
         <div className="max-w-2xl text-center lg:text-left">
           <h2 className="text-3xl sm:text-4xl font-bold text-[#219596]">
