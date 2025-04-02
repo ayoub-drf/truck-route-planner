@@ -23,11 +23,9 @@ def create_rests_and_stops(route_data):
         return hours * 3600
 
     def create_stop_step(stop_type, duration_seconds, prev_way_points, route_geometry=None):
-        # Use the ending way_point of the previous step, then increment for the next
         start_idx = prev_way_points[1]
         
         coord = route_geometry[start_idx]
-        # Apply a small offset (adjust as needed)
         offset_lat = 0.0001
         offset_lon = 0.0001
         stop_coord = [coord[0] + offset_lat, coord[1] + offset_lon]
@@ -56,7 +54,6 @@ def create_rests_and_stops(route_data):
     current_day_log = []
     
     for route in routes:
-        # Reset trackers for each new route
         fueling_stop_break_tracker = 0
         pickup_tracker = 0
         pickup_tracker_status = False
@@ -256,7 +253,6 @@ def create_rests_and_stops(route_data):
 #         return hours * 3600
 
 #     def create_stop_step(stop_type, duration_seconds, prev_way_points, route_geometry=None):
-#         # Use the ending way_point of the previous step, then increment for the next
 #         start_idx = prev_way_points[1]
         
 #         coord = route_geometry[start_idx]
