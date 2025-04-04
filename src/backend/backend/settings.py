@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
     '0.0.0.0',
     'localhost',
     '127.0.0.1',
+    # 'ayoub-drf.pythonanywhere.com',
     
 ]
 
@@ -143,10 +144,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 OPENROUTESERVICE_API_KEY = config('OPENROUTESERVICE_API_KEY', cast=str)
 
-CORS_ALLOWED_ORIGINS = [
-    config('ALLOWED_ORIGIN', cast=str),  # React frontend
-    config('ALLOWED_ORIGIN_TWO', cast=str),  # React frontend
-]
+# CORS_ALLOWED_ORIGINS = [
+#     config('ALLOWED_ORIGIN', cast=str),  # React frontend
+#     config('ALLOWED_ORIGIN_TWO', cast=str),  # React frontend
+# ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 # CELERY_RESULT_BACKEND = "redis://localhost:6379"
 # CELERY_BROKER_URL="redis://localhost:6379"
