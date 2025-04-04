@@ -216,7 +216,7 @@ const RouteMap = () => {
               alt=""
             />
           </div>
-          <a href={`http://127.0.0.1:8000/${log}`} download target="_blank" rel="noopener noreferrer">
+          <a href={`https://ayoubx0x9.pythonanywhere.com/${log}`} download target="_blank" rel="noopener noreferrer">
             <button className="text-3xl uppercase">Download PDF</button>
           </a>
         </div>
