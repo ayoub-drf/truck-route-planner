@@ -1,3 +1,9 @@
+.text-primary {
+  color: #EB1616 !important;
+}
+.body-color {
+  color: #000000;
+}
 .custom-step-icon {
   display: flex;
   justify-content: center;
@@ -8,14 +14,4 @@
   border-radius: 50%;
   font-size: 13px;
 }
-.cPctGk {
-  background-image: url("https://spotter.ai/static/media/background.053b8effeadc141e3bfb9383740b1c28.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center bottom;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  bottom: 130px;
-  z-index: -1;
-}
+

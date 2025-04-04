@@ -119,7 +119,7 @@ const RouteMap = () => {
     <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div
         id="statistics"
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 my-5 text-white font-bold"
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 my-5 text-black font-bold"
       >
         <div className="flex flex-col justify-around p-6 rounded-md shadow-2xl">
           <div className="flex justify-between items-center mb-4">
@@ -205,7 +205,7 @@ const RouteMap = () => {
           <h1 className="text-3xl">{numberOfOffDuty}</h1>
         </div>
 
-        <div className="flex flex-col justify-around p-6 rounded-md shadow-2xl bg-green-500 cursor-pointer">
+        <div className="flex flex-col justify-around p-6 rounded-md shadow-2xl bg-green-500 text-white cursor-pointer">
           <div className="flex justify-between items-center mb-4">
             <h3 className="uppercase">Log Sheets (PDF)</h3>
             <img
