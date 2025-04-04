@@ -2,6 +2,8 @@
 
 ![Truck Planner](truck-planner.png)
 
+![Truck Planner State](truck-planner.png-state.png) 
+
 #### **Overview**
 
 Smart Truck Planner is a powerful route planning tool designed specifically for **US truck drivers**. It helps drivers **optimize fuel stops, manage rest breaks, and comply with DOT regulations** effortlessly. With a user-friendly interface and smart algorithms, this planner ensures **better efficiency, lower costs, and stress-free journeys**.
@@ -37,13 +39,10 @@ python manage.py src/backend/runserver
 
 # Start Frontend (React or Vite)
 cd src/frontend/ && npm run dev
-```
 
-#### **Screenshots**
-
-![Truck Planner State](truck-planner.png-state.png)  
-![Truck Planner State](truck-planner-mobile1.png)  
-![Truck Planner State](truck-planner-mobile.png)
+# or 
+docker-compose up
+``` 
 
 #### **Contributing**
 

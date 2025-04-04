@@ -26,6 +26,7 @@ export const useRouteMapStore = create<RouteMapStoreType>((set) => ({
 }));
 
 type RoadStatisticsStoreType = {
+    log: string,
     dropoffMiles: number,
     numberOfBreaks: number,
     numberOfFueling: number,
@@ -42,9 +43,11 @@ type RoadStatisticsStoreType = {
     setTotalDrivingHours: (x: number) => void,
     setTotalDrivingMiles: (x: number) => void,
     setRoute: (r: any) => void,
+    setLog: (l: any) => void,
 }
 
 export const useRoadStatisticsStore = create<RoadStatisticsStoreType>((set) => ({
+    log: "",
     dropoffMiles: 0,
     numberOfBreaks: 0,
     numberOfFueling: 0,
@@ -61,4 +64,5 @@ export const useRoadStatisticsStore = create<RoadStatisticsStoreType>((set) => (
     setTotalDrivingHours: (x) => set(() => ({ totalDrivingHours: x })),
     setTotalDrivingMiles: (x) => set(() => ({ totalDrivingMiles: x })),
     setRoute: (r) => set(() => ({ route: r })),
+    setLog: (l) => set(() => ({ log: l })),
 }));

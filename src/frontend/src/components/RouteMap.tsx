@@ -40,6 +40,7 @@ const RouteMap = () => {
     totalDrivingHours,
     totalDrivingMiles,
     route,
+    log,
   } = useRoadStatisticsStore();
   const [routeLatLngs, setRouteLatLngs] = useState<[number, number][]>([]);
   const [stepMarkers, setStepMarkers] = useState<StepMarker[]>([]);
@@ -108,6 +109,7 @@ const RouteMap = () => {
     totalDrivingHours,
     totalDrivingMiles,
     route,
+    log,
   ]);
 
   let bounds: L.LatLngBounds | undefined;
@@ -214,7 +216,9 @@ const RouteMap = () => {
               alt=""
             />
           </div>
-          <h1 className="text-3xl uppercase">click me</h1>
+          <a href={`http://127.0.0.1:8000/${log}`} download target="_blank" rel="noopener noreferrer">
+            <button className="text-3xl uppercase">Download PDF</button>
+          </a>
         </div>
       </div>
       <MapContainer

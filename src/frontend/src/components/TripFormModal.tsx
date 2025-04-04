@@ -14,7 +14,7 @@ interface SuggestionsTypes {
 }
 
 const TripFormModal: FC<TripFormModalProps> = ({ hideTripModal, showRouteMap }) => {
-  const {setDropoffMiles, setNumberOfBreaks, setNumberOfFueling, setNumberOfOffDuty, setPickupMiles, setTotalDrivingHours, setTotalDrivingMiles, setRoute} = useRoadStatisticsStore()
+  const {setLog, setDropoffMiles, setNumberOfBreaks, setNumberOfFueling, setNumberOfOffDuty, setPickupMiles, setTotalDrivingHours, setTotalDrivingMiles, setRoute} = useRoadStatisticsStore()
   const [currentLocation, setCurrentLocation] = useState<SuggestionsTypes | null>(null);
   const [pickupLocation, setPickupLocation] = useState<SuggestionsTypes | null>(null);
   const [dropoffLocation, setDropoffLocation] = useState<SuggestionsTypes | null>(null);
@@ -96,6 +96,7 @@ const TripFormModal: FC<TripFormModalProps> = ({ hideTripModal, showRouteMap }) 
       setTotalDrivingHours(res.data.total_driving_hours)
       setTotalDrivingMiles(res.data.total_driving_miles)
       setRoute(res.data.route)
+      setLog(res.data.log)
       showRouteMap()
       hideTripModal()
     } catch (error: any) {

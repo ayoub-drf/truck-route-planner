@@ -1,11 +1,17 @@
+from django.utils.crypto import get_random_string
 from rest_framework import status
 import requests
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from .tasks import create_rests_and_stops
+from .tasks import (
+    create_rests_and_stops,
+    draw_log,
+    adjust_hours,
+)
 import requests
+
 
 DIRECTIONS_URL = settings.DIRECTIONS_URL
 OPENROUTESERVICE_AUTOCOMPLETE = settings.OPENROUTESERVICE_AUTOCOMPLETE
@@ -40,8 +46,12 @@ class GenerateRouteAPI(APIView):
             if route_data.get('error'):
                 return Response({'message': route_data['error']['message']}, status=status.HTTP_404_NOT_FOUND)
             
-            print('route_data ', route_data)
+            # print('route_data ', route_data)
             result = create_rests_and_stops(route_data)
+            log_sheet_result = adjust_hours(result['log_sheet_result'])
+            log = draw_log(log_sheet_result, f"log_sheet_output-{get_random_string(10)}.pdf")
+            
+            print('log', log)
             
             total_driving_hours = round((route_data.get('routes')[0].get('summary').get('duration') / 3600), 2)
             total_driving_miles = round((route_data.get('routes')[0].get('summary').get('distance') * 0.000621371), 2)
@@ -56,6 +66,7 @@ class GenerateRouteAPI(APIView):
                 'dropoff_miles': total_driving_miles,
                 'total_driving_miles': total_driving_miles,
                 'total_driving_hours': total_driving_hours,
+                'log': log,
             }, status=status.HTTP_201_CREATED)
         except:
 
