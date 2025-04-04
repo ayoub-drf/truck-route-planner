@@ -8,7 +8,6 @@ from reportlab.pdfgen import canvas
 from io import BytesIO
 import os
 from django.conf import settings
-from django.http import HttpResponse
 from django.contrib.staticfiles import finders
 
 def create_rests_and_stops(route_data, current_cycle_used=0):

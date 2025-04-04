@@ -23,7 +23,10 @@ class GenerateRouteAPI(APIView):
         current_location = data.get('currentLocation')
         pickup_location = data.get('pickupLocation')
         dropoff_location = data.get('dropoffLocation')
-                
+        currentUsedHours = data.get('currentUsedHours')
+        print('currentUsedHours', currentUsedHours)
+        print('currentUsedHours', type(currentUsedHours))
+        
         route_coordinates = [
             current_location.get('coordinates'),
             pickup_location.get('coordinates'),
@@ -47,7 +50,7 @@ class GenerateRouteAPI(APIView):
                 return Response({'message': route_data['error']['message']}, status=status.HTTP_404_NOT_FOUND)
             
             # print('route_data ', route_data)
-            result = create_rests_and_stops(route_data)
+            result = create_rests_and_stops(route_data, int(currentUsedHours))
             log_sheet_result = adjust_hours(result['log_sheet_result'])
             log = draw_log(log_sheet_result, f"log_sheet_output-{get_random_string(10)}.pdf")
             
@@ -68,8 +71,8 @@ class GenerateRouteAPI(APIView):
                 'total_driving_hours': total_driving_hours,
                 'log': log,
             }, status=status.HTTP_201_CREATED)
-        except:
-
+        except  Exception as e:
+            print(e)
             return Response({
                 'message': "an error occurred please wait abd try again",
             }, status=status.HTTP_404_NOT_FOUND)

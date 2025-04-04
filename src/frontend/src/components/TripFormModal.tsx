@@ -18,6 +18,7 @@ const TripFormModal: FC<TripFormModalProps> = ({ hideTripModal, showRouteMap }) 
   const [currentLocation, setCurrentLocation] = useState<SuggestionsTypes | null>(null);
   const [pickupLocation, setPickupLocation] = useState<SuggestionsTypes | null>(null);
   const [dropoffLocation, setDropoffLocation] = useState<SuggestionsTypes | null>(null);
+  const [currentUsedHours, setCurrentUsedHours] = useState<string>("");
 
   const [currentLocationSuggestions, setCurrentLocationSuggestions] = useState<SuggestionsTypes[]>([]);
   const [pickupLocationSuggestions, setPickupLocationSuggestions] = useState<SuggestionsTypes[]>([]);
@@ -43,7 +44,7 @@ const TripFormModal: FC<TripFormModalProps> = ({ hideTripModal, showRouteMap }) 
           } else if (field === "dropoffLocation") {
             setDropoffLocation({label: value});
             setDropoffLocationSuggestions(suggestions);
-          }
+          } 
         }
       } catch (error) {
         console.error("Error fetching location suggestions:", error);
@@ -82,6 +83,7 @@ const TripFormModal: FC<TripFormModalProps> = ({ hideTripModal, showRouteMap }) 
       currentLocation,
       pickupLocation,
       dropoffLocation,
+      currentUsedHours,
     };
 
 
@@ -212,6 +214,7 @@ const TripFormModal: FC<TripFormModalProps> = ({ hideTripModal, showRouteMap }) 
                 <input
                   required
                   type="number"
+                  onChange={(e) => setCurrentUsedHours(e.target.value)}
                   placeholder="Enter hours"
                   className="mt-1 w-full rounded border p-2 outline-none focus:ring-2 focus:ring-blue-500"
                 />
